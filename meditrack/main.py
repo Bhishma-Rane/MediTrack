@@ -64,7 +64,7 @@ def create_app(database_url: str | None = None, sms_sender=None) -> FastAPI:
         await manager.broadcast({"type": "dose.updated", "version": 1, "log_id": log.log_id,
                                  "device_id": payload.device_id, "status": status,
                                  "timestamp": occurred.isoformat(), "alerted": alerted})
-        return TelemetryOut(accepted=True, duplicate=False, log_id=log.log_id, status=status)
+        return TelemetryOut(accepted=True, duplicate=False, log_id=log.log_id, status=status, alerted=alerted)
 
     @app.websocket("/ws/live-stream")
     async def live_stream(websocket: WebSocket):

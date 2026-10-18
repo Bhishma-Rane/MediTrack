@@ -33,3 +33,4 @@ class TelemetryOut(BaseModel):
     duplicate: bool
     log_id: int
     status: str
+    alerted: bool = False

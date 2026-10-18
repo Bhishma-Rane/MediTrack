@@ -1,5 +1,6 @@
 from collections.abc import Generator
 from datetime import datetime, time
+from pathlib import Path
 
 from sqlalchemy import DateTime, ForeignKey, Integer, String, create_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship, sessionmaker
@@ -43,6 +44,8 @@ class DoseLog(Base):
 
 def make_engine(database_url: str):
     connect_args = {"check_same_thread": False} if database_url.startswith("sqlite") else {}
+    if database_url.startswith("sqlite:///") and database_url != "sqlite:///:memory:":
+        Path(database_url.removeprefix("sqlite:///" )).parent.mkdir(parents=True, exist_ok=True)
     return create_engine(database_url, connect_args=connect_args)
 
 
