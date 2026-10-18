@@ -1,4 +1,4 @@
-# MediTrack — Part 3 backend
+# MediTrack — Parts 3 and 4
 
 FastAPI telemetry and real-time notification backend for the MediTrack ESP32 medication compliance system.
 
@@ -10,7 +10,7 @@ FastAPI telemetry and real-time notification backend for the MediTrack ESP32 med
 - Idempotency through `event_id` (or a deterministic device/timestamp/event key).
 - Grace-period-aware missed-dose alerts. Twilio is used only when its three settings are present; otherwise the default is a safe local dry-run sender.
 
-This is Part 3 only. Hardware pinout, ESP32 firmware, Streamlit analytics, and PDF reporting are intentionally not included yet.
+Part 4 adds a Streamlit caregiver dashboard and downloadable ReportLab PDF compliance reports.
 
 ## Setup
 
@@ -30,6 +30,14 @@ make run
 ```
 
 The API is available at `http://localhost:8000`; health check: `GET /health`.
+
+Start the caregiver dashboard in a second terminal:
+
+```bash
+make dashboard
+```
+
+The dashboard is available at `http://localhost:8501`. It reads the configured SQLite database, shows node online/offline status based on the latest telemetry, computes adherence, filters TAKEN/MISSED/LATE logs, and generates a downloadable PDF report.
 
 Example telemetry request:
 
