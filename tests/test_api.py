@@ -64,6 +64,10 @@ def test_missed_after_grace_period_sends_one_alert(setup_app):
         assert response.json()["alerted"] is True
         assert len(sender.calls) == 1
         assert "Asha Rane" in sender.calls[0][1]
+        payload["event_id"] = "evt-missed-retry"
+        retry = client.post("/api/v1/telemetry", json=payload)
+        assert retry.json()["alerted"] is False
+        assert len(sender.calls) == 1
 
 
 def test_naive_timestamp_is_rejected(setup_app):

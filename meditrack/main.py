@@ -53,13 +53,18 @@ def create_app(database_url: str | None = None, sms_sender=None) -> FastAPI:
             raise HTTPException(status_code=404, detail="patient and schedule are required or must exist")
         status = {"DOSE_TAKEN": "TAKEN", "DOSE_MISSED": "MISSED", "DOSE_SNOOZED": "SNOOZED"}[payload.event.value]
         occurred = payload.timestamp.astimezone(timezone.utc)
+        prior_missed = db.query(DoseLog).filter(
+            DoseLog.patient_id == patient.patient_id,
+            DoseLog.schedule_id == schedule.schedule_id,
+            DoseLog.status == "MISSED",
+        ).first() is not None
         log = DoseLog(patient_id=patient.patient_id, schedule_id=schedule.schedule_id, device_id=payload.device_id,
                       timestamp=occurred, status=status, response_time_sec=payload.latency_seconds, event_id=event_id)
         db.add(log)
         db.commit()
         db.refresh(log)
         alerted = False
-        if status == "MISSED":
+        if status == "MISSED" and not prior_missed:
             alerted = await alert_for_missed_dose(sms_sender, patient=patient, schedule=schedule, timestamp=occurred)
         await manager.broadcast({"type": "dose.updated", "version": 1, "log_id": log.log_id,
                                  "device_id": payload.device_id, "status": status,
