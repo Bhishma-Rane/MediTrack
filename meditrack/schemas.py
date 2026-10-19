@@ -8,6 +8,11 @@ class TelemetryEvent(StrEnum):
     DOSE_TAKEN = "DOSE_TAKEN"
     DOSE_MISSED = "DOSE_MISSED"
     DOSE_SNOOZED = "DOSE_SNOOZED"
+    DISPENSE_ATTEMPTED = "DISPENSE_ATTEMPTED"
+    DISPENSE_CONFIRMED = "DISPENSE_CONFIRMED"
+    DISPENSE_UNCONFIRMED = "DISPENSE_UNCONFIRMED"
+    DISPENSE_FAULT = "DISPENSE_FAULT"
+    DEVICE_HEARTBEAT = "DEVICE_HEARTBEAT"
 
 
 class TelemetryIn(BaseModel):
@@ -33,4 +38,5 @@ class TelemetryOut(BaseModel):
     duplicate: bool
     log_id: int
     status: str
+    event: TelemetryEvent
     alerted: bool = False

@@ -93,3 +93,49 @@ def test_websocket_receives_live_update(setup_app):
             update = websocket.receive_json()
             assert update["type"] == "dose.updated"
             assert update["status"] == "SNOOZED"
+            assert update["event"] == "DOSE_SNOOZED"
+            assert update["patient_id"] == 1
+            assert update["schedule_id"] == 1
+
+
+@pytest.mark.parametrize("event", [
+    "DISPENSE_ATTEMPTED", "DISPENSE_CONFIRMED", "DISPENSE_UNCONFIRMED", "DISPENSE_FAULT",
+])
+def test_dispensing_telemetry_is_persisted_without_becoming_taken(setup_app, event):
+    app, _ = setup_app
+    with TestClient(app) as client:
+        response = client.post("/api/v1/telemetry", json={
+            "device_id": "ESP32_MED_01", "event": event,
+            "timestamp": "2026-10-18T08:05:00+00:00", "patient_id": 1,
+            "schedule_id": 1, "compartment": 2, "event_id": f"evt-{event}",
+        })
+        assert response.status_code == 200
+        assert response.json()["event"] == event
+        assert response.json()["status"] == event
+
+        from meditrack.db import DoseLog, make_session_factory
+        db = make_session_factory(app.state.database_url)()
+        log = db.query(DoseLog).filter(DoseLog.event_id == f"evt-{event}").one()
+        assert log.event_type == event
+        assert log.status == event
+        assert log.compartment == 2
+        db.close()
+        # The response status is deliberately the event status; it cannot be
+        # counted by the existing TAKEN-only adherence calculation.
+        assert response.json()["status"] != "TAKEN"
+
+
+def test_device_heartbeat_is_persisted_without_patient_context(setup_app):
+    app, _ = setup_app
+    with TestClient(app) as client:
+        response = client.post("/api/v1/telemetry", json={
+            "device_id": "ESP32_MED_01", "event": "DEVICE_HEARTBEAT",
+            "timestamp": "2026-10-18T08:05:00+00:00", "event_id": "heartbeat-1",
+        })
+        assert response.status_code == 200
+        assert response.json()["status"] == "DEVICE_HEARTBEAT"
+        duplicate = client.post("/api/v1/telemetry", json={
+            "device_id": "ESP32_MED_01", "event": "DEVICE_HEARTBEAT",
+            "timestamp": "2026-10-18T08:05:00+00:00", "event_id": "heartbeat-1",
+        })
+        assert duplicate.json()["duplicate"] is True
