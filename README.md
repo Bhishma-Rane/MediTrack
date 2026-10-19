@@ -63,6 +63,12 @@ make dashboard
 
 The dashboard is available at `http://localhost:8501`. It reads the configured SQLite database, shows node online/offline status based on the latest telemetry, computes adherence, filters TAKEN/MISSED/LATE logs, and generates a downloadable PDF report.
 
+### Portal administration
+
+Patient and medication setup no longer requires direct database access. Set `ADMIN_USERNAME` and `ADMIN_PASSWORD` in `.env`, restart Streamlit, then open the **Admin portal** tab. The administrator can register patients and add daily UTC medication schedules with dosage and grace period. The caregiver tab is read-only for these records.
+
+This is local/demo authentication for the portal. For deployment on a network, put Streamlit behind HTTPS and an identity-aware reverse proxy or replace this shared admin secret with organization authentication before handling real patient data.
+
 Example telemetry request:
 
 ```bash
@@ -71,7 +77,7 @@ curl -X POST http://localhost:8000/api/v1/telemetry \
   -d '{"device_id":"ESP32_MED_01","event":"DOSE_TAKEN","timestamp":"2026-10-18T08:05:00Z","patient_id":1,"schedule_id":1,"latency_seconds":300}'
 ```
 
-Patients and schedules should be provisioned in the database before telemetry ingestion. The API rejects events that cannot resolve both records.
+Patients and schedules can be provisioned through the Admin portal. The API rejects telemetry events that cannot resolve both records.
 
 ## Test
 

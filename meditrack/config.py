@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     twilio_account_sid: str | None = None
     twilio_auth_token: str | None = None
     twilio_from_number: str | None = None
+    admin_username: str | None = None
+    admin_password: str | None = None
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 

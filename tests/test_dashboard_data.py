@@ -1,7 +1,21 @@
 from datetime import date, datetime, time, timezone
 
 from meditrack.analytics import occurrence_adherence
+from meditrack.admin import create_patient, create_schedule
 from meditrack.dashboard_data import scheduled_occurrences
+from meditrack.db import Base, make_engine, make_session_factory
+
+
+def test_admin_services_create_patient_and_schedule(tmp_path):
+    url = f"sqlite:///{tmp_path / 'admin.db'}"
+    engine = make_engine(url)
+    Base.metadata.create_all(engine)
+    db = make_session_factory(url)()
+    patient = create_patient(db, name="Asha Rane", emergency_contact_phone="+15551234567", doctor_email="doctor@example.com")
+    schedule = create_schedule(db, patient_id=patient.patient_id, medication_name="Lisinopril", dosage="10 mg", target_time_utc=time(8), grace_period_mins=15)
+    assert patient.patient_id > 0
+    assert schedule.patient_id == patient.patient_id
+    db.close()
 
 
 def test_daily_occurrences_count_scheduled_doses_not_raw_events():
