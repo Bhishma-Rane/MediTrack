@@ -14,8 +14,8 @@ lid_t = 3;
 insert_x = 150;
 insert_y = 88;
 insert_depth = 18;
-hopper_x = 54;
-hopper_y = 54;
+hopper_x = 42;
+hopper_y = 42;
 hopper_z = 38;
 servo_bay_x = 42;
 chute_x = 30;
@@ -71,16 +71,16 @@ module lid() {
     }
 }
 
-module hopper() {
-    // Removable medication-contact hopper. The gate is intentionally shown
+module cylinder_cartridge() {
+    // Removable medication-contact cylinder. The gate is intentionally shown
     // as a separate component so its final pocket can be sized for one test
     // object after the object dimensions are known.
     difference() {
         rounded_box([hopper_x, hopper_y, hopper_z], 5);
         translate([wall, wall, wall])
             rounded_box([hopper_x-2*wall, hopper_y-2*wall, hopper_z], 3);
-        translate([(hopper_x-16)/2, -1, 0])
-            cube([16, wall+2, 12]);
+        translate([(hopper_x-14)/2, -1, 0])
+            cube([14, wall+2, 12]);
     }
 }
 
@@ -103,12 +103,17 @@ module chute() {
     }
 }
 
-// Exploded layout for preview: base, insert, hopper, servo bracket, chute,
+// Exploded layout for preview: base, insert, three rear cylinders, three servo
+// brackets, chute,
 // then lid. Final gate/linkage dimensions depend on the selected servo and
 // the validated test-object geometry.
 translate([0,0,0]) base_shell();
 translate([(outer_x-insert_x)/2, (outer_y-insert_y)/2, wall+1]) insert_tray();
-translate([18, 28, outer_z+8]) hopper();
-translate([82, 28, outer_z+8]) servo_bracket();
+translate([12, 28, outer_z+8]) cylinder_cartridge();
+translate([60, 28, outer_z+8]) cylinder_cartridge();
+translate([108, 28, outer_z+8]) cylinder_cartridge();
+translate([18, 78, outer_z+8]) servo_bracket();
+translate([70, 78, outer_z+8]) servo_bracket();
+translate([122, 78, outer_z+8]) servo_bracket();
 translate([132, 35, outer_z+8]) chute();
 translate([0, outer_y+15, outer_z+10]) lid();

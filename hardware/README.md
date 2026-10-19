@@ -29,8 +29,9 @@ The prototype has two mutually exclusive sensing options:
   flap sensor on GPIO27.
 
 The product no longer uses an HC-SR04. GPIO18 is the 3.3 V-safe lid sensor
-input. GPIO23 controls a 5 V servo on a dedicated fused power branch. GPIO27
-is reserved for optional chute confirmation.
+input. GPIO23, GPIO25, and GPIO26 control the three 5 V cylinder servos on a
+dedicated fused power branch. GPIO27 is reserved for optional chute
+confirmation.
 
 ## Included artifacts
 
@@ -71,10 +72,10 @@ is reserved for optional chute confirmation.
 2. Assemble the electronics on a breadboard or carrier, with the ESP32
    unpowered while checking continuity.
 3. Follow `validation/bringup_checklist.md` using a current-limited supply.
-4. Validate the lid sensor and servo gate independently with inert test
+4. Validate the lid sensor and all three servo gates independently with inert test
    objects; do not begin with real medication.
 5. Print `enclosure/meditrack_enclosure.scad`, install the removable insert,
-   hopper, gate, chute, servo bracket, and lid sensor.
+   three cylinders, three gates, chute, servo brackets, and lid sensor.
 6. Calibrate the gate for one known object shape and test jam/power-loss cases.
 7. Only after the hardware checks pass should firmware and backend integration
    be connected.

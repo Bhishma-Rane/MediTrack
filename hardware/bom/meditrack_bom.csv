@@ -3,7 +3,9 @@ U1,1,ESP32 development board,ESP32-WROOM-32E DevKit,3.3 V GPIO; USB 5 V input; G
 U2,1,OLED display,1.3in SH1106 I2C module,3.3 V-compatible; address 0x3C or 0x3D,Confirm pin order before wiring
 S1,1,Lid microswitch,KW12-3 or equivalent,Normally-open lever switch; 3.3 V-safe,Primary compartment/lid sensor
 B2,1,Dispense confirmation sensor,Optical break-beam or flap microswitch,3.3 V-safe output,Optional; confirms object passed through chute, not ingestion
-B3,1,Servo motor,SG90-class positional servo for prototype,5 V; known stall current; metal/plastic gear selected after load test,Opens one-dose gate; dedicated 5 V branch; not powered from GPIO
+B3-B5,3,180-degree servo motors,SG90-class positional servo or equivalent,5 V; known stall current; independent calibrated endpoints,One servo per sanitized medicine cylinder; dedicated 5 V branch; not powered from GPIO
+Cyl1-Cyl3,3,Sanitized medicine cylinders,Removable food/medical-contact-safe cylinders,Known internal diameter; removable caps; cleanable,One medicine type per cylinder; prototype material must be validated for intended use
+G1-G3,3,Cylinder dispensing gates,Custom rotary/sliding gate inserts,One-object geometry validated for the selected medicine,Servo rotates each gate; cylinder itself need not rotate
 B1,1,Active buzzer,3.3 V active piezo or 5 V low-current module,Use MOSFET low-side driver; verify current and inductive behavior
 Q1,1,N-channel MOSFET,AO3400A or 2N7002,Logic-level gate at 3.3 V; current margin,Gate pulldown R6 required
 LED1,1,Green LED,5 mm diffused green,Low-current indicator,Series resistor R4
@@ -16,9 +18,9 @@ R5,1,Red LED resistor,680 Ohm,GPIO15 current limiting,Adjust for measured LED cu
 R6,1,MOSFET gate pulldown,100 kOhm,Gate to GND,Ensures buzzer off during reset
 C1-C5,5,Local bypass capacitors,100 nF ceramic,One at each module/rail entry,Place close to power pins
 C6,1,5 V logic bulk capacitor,470 uF 10 V low-ESR,Near ESP32/buzzer supply entry,Reduce Wi-Fi/buzzer transients
-C7,1,Servo bulk capacitor,1000 uF 10 V low-ESR,Near servo connector,Size after measuring servo startup/stall current
-F1,1,Resettable fuse,1.5 A hold polyfuse,5 V input protection,Select from measured total/servo stall current
-F2,1,Servo branch fuse,750 mA to 1.5 A resettable fuse,Servo branch protection,Select from exact servo datasheet and stall test
+C7,1,Servo bulk capacitor,2200 uF 10 V low-ESR,Near the three-servo power distribution,Size after measuring simultaneous startup/stall current
+F1,1,Resettable fuse,2.5 A hold polyfuse,5 V input protection,Select from measured total/servo stall current
+F2,1,Servo branch fuse,1.5 A to 2.5 A resettable fuse,Three-servo branch protection,Select from exact servo datasheet and stall test
 D1,1,Reverse-polarity protection,SS14 or ideal-diode controller,Rated above supply current,Verify voltage drop
 J1,1,OLED connector,4-pin keyed JST-PH,3V3/SDA/SCL/GND,Pin order must match module
 J2,1,Sensor connector,4-pin keyed JST-PH,5V/TRIG/SENSE/GND,Populate either U3 or S1 harness
@@ -26,5 +28,7 @@ J3,1,Buzzer connector,2-pin keyed JST-PH,BUZZER+/BUZZER-,Keep return away from s
 J4,1,Button connector,4-pin keyed JST-PH,three buttons/GND,Use short harness or add ESD protection
 J5,1,LED connector,3-pin keyed JST-PH,green/red/GND,Series resistors remain on controller side
 J6,1,Servo connector,3-pin keyed connector,signal/5V/GND,Use a separate power pair or heavy enough conductors
+J8,1,Servo cylinder 2 connector,3-pin keyed connector,signal/5V/GND,Separate signal; shared high-current 5 V branch
+J9,1,Servo cylinder 3 connector,3-pin keyed connector,signal/5V/GND,Separate signal; shared high-current 5 V branch
 J7,1,Chute sensor connector,3-pin keyed connector,sense/3V3-or-5V/GND,Populate only if confirmation sensor is fitted
 PS1,1,USB power supply,Certified 5 V 2 A adapter,Isolated low-voltage output,Do not put mains inside enclosure

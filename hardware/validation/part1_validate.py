@@ -15,7 +15,9 @@ def main() -> None:
         "I2C_SCL": "22",
         "COMPARTMENT_SENSE": "18",
         "BUZZER_GATE": "19",
-        "DISPENSER_SERVO": "23",
+        "SERVO_CYLINDER_1": "23",
+        "SERVO_CYLINDER_2": "25",
+        "SERVO_CYLINDER_3": "26",
         "DISPENSE_CONFIRM": "27",
         "BTN_CONFIRM": "4",
         "BTN_MUTE_SNOOZE": "16",
@@ -28,7 +30,7 @@ def main() -> None:
         assert by_net[net]["esp32_gpio"] == gpio, (net, by_net[net])
 
     bom_text = (ROOT / "bom/meditrack_bom.csv").read_text()
-    assert "Servo motor" in bom_text
+    assert "servo motors" in bom_text
     assert "Normally-open lever switch" in bom_text
 
     diagram = (ROOT / "schematics/meditrack_block_diagram.svg").read_text()

@@ -55,7 +55,9 @@ short version is:
 | OLED SDA | GPIO21; VCC to 3.3 V; GND to GND |
 | OLED SCL | GPIO22; VCC to 3.3 V; GND to GND |
 | Lid microswitch, preferred | GPIO18 with pull-up; switch between GPIO18 and GND |
-| Servo signal | GPIO23; servo power is a separate fused 5 V branch; servo ground is common |
+| Cylinder 1 servo signal | GPIO23; servo power is a separate fused 5 V branch; servo ground is common |
+| Cylinder 2 servo signal | GPIO25; shared servo power branch; servo ground is common |
+| Cylinder 3 servo signal | GPIO26; shared servo power branch; servo ground is common |
 | Optional chute sensor | GPIO27; 3.3 V-safe output, with its selected pull-up/down |
 | Buzzer | Positive to its rated rail; negative to Q1 drain; Q1 source to GND; Q1 gate to GPIO19; 100 kΩ gate-to-GND |
 | Confirm button | GPIO4 to GND when pressed; internal pull-up |
@@ -106,24 +108,32 @@ Regardless of sensor choice, firmware must debounce and require three stable
 readings over at least 300 ms. An unknown or noisy reading must not become
 `DOSE_TAKEN`.
 
-## How dispensing works
+## How the three-cylinder dispenser works
 
-The hopper sits above a chute. A servo on GPIO23 moves a one-dose gate between
-two calibrated positions. The gate has a hard closed stop, and the mechanical
-geometry must prevent free fall when the servo is unpowered. A normal cycle is:
+The rear of the case holds three separate sanitized, removable cylinders. Each
+cylinder is dedicated to one medicine and has its own gate and 180-degree
+servo. A controller schedule maps a dose to cylinder 1, 2, or 3. The cylinder
+itself normally stays fixed; the servo rotates its gate between closed and
+dispense positions. The gate has a hard closed stop, and its geometry must
+prevent free fall when the servo is unpowered. A normal cycle is:
 
-1. Load the hopper with one validated test-object type.
-2. Keep the gate closed until the local confirm button is pressed.
-3. Move the servo once to the dispense position.
-4. Allow one object to fall into the collection cup.
-5. If installed, wait for the chute sensor on GPIO27.
-6. Return the servo to the closed stop.
-7. Record attempted, confirmed, or unconfirmed dispensing.
+1. Load each cylinder with its assigned, validated test-object type.
+2. Select the scheduled cylinder; never activate more than the requested
+   cylinder.
+3. Keep all three gates closed until the local confirm button is pressed.
+4. Move only the selected cylinder's servo once to the dispense position.
+5. Allow the object to fall into the collection cup.
+6. If installed, wait for the chute sensor on GPIO27.
+7. Return the selected servo to its closed stop; verify the other two remain
+   closed.
+8. Record attempted, confirmed, or unconfirmed dispensing with the cylinder
+   number.
 
-The servo must not be powered from the ESP32. Use a dedicated fused 5 V branch,
-common ground, and approximately 1000 µF bulk capacitance near the servo. Do
+The servos must not be powered from the ESP32. Use a dedicated fused 5 V branch,
+common ground, and approximately 2200 µF bulk capacitance near the three-servo
+power distribution. Do
 not retry indefinitely after a jam or power interruption. The collection cup
-and hopper should be removable and cleanable, while the servo and electronics
+and cylinders should be removable and cleanable, while the servos and electronics
 remain outside the medication-contact surfaces.
 
 ## Current completion estimate

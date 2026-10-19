@@ -67,18 +67,21 @@ strapping pins. If the chosen board cannot boot reliably, keep the specified
 logical nets but move the LED load to a transistor/expander in a future PCB
 revision; do not solve it by forcing a boot pin with a strong external pull.
 
-## J6 — dispenser servo (3-pin)
+## J6/J8/J9 — medicine-cylinder servos (three 3-pin connectors)
 
-| J6 pin | Net | Destination |
+| Connector/pin | Net | Destination |
 | ---: | --- | --- |
-| 1 | `DISPENSER_SERVO` | Servo signal from GPIO23 through optional 220 Ω resistor |
-| 2 | `POWER_5V` | Dedicated fused servo branch; never an ESP32 GPIO or 3.3 V rail |
-| 3 | `GROUND` | Common ground/star return near power entry |
+| J6-1 | `SERVO_CYLINDER_1` | Cylinder 1 servo signal from GPIO23 |
+| J8-1 | `SERVO_CYLINDER_2` | Cylinder 2 servo signal from GPIO25 |
+| J9-1 | `SERVO_CYLINDER_3` | Cylinder 3 servo signal from GPIO26 |
+| J6/J8/J9-2 | `POWER_5V` | Shared dedicated fused servo branch; never an ESP32 GPIO or 3.3 V rail |
+| J6/J8/J9-3 | `GROUND` | Common ground/star return near power entry |
 
-The servo actuates a one-dose gate. It does not count pills by itself. Use 50 Hz
-hardware PWM, calibrated endpoints, and a positive mechanical closed stop. Add
-C7 (typically 1000 µF) near the connector and size F2 from the exact servo
-stall current.
+Each 180-degree servo actuates the gate for one cylinder. The cylinder itself
+does not need to rotate. Use 50 Hz hardware PWM, calibrated endpoints, and a
+positive mechanical closed stop for every cylinder. Add C7 near the three-servo
+power distribution and size F2 from the exact servo stall current. Do not
+command all three servos to move simultaneously until the supply is verified.
 
 ## J7 — optional chute confirmation sensor (3-pin)
 

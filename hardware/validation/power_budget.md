@@ -12,11 +12,12 @@ them as certification evidence.
 | SH1106 OLED | 25 mA | 40 mA | 3.3 V |
 | Lid microswitch / Hall / reed sensor | 0–10 mA | 15 mA | 3.3 V |
 | Active buzzer | 25 mA | 80 mA | 3.3/5 V per selected part |
-| Servo motor | 100 mA | 700–1000 mA stall/startup | 5 V dedicated branch |
+| Three 180-degree servo motors | 300 mA | 2.1–3.0 A combined stall/startup | 5 V dedicated branch |
 | LEDs and buttons | 10 mA | 20 mA | 3.3 V |
-| **Estimated total** | **335 mA** | **1.6 A** | **5 V input equivalent** |
+| **Estimated total** | **535 mA** | **3.6 A** | **5 V input equivalent** |
 
-A certified 5 V, 2–3 A adapter is recommended after the exact servo is chosen.
+A certified 5 V, **at least 4 A** adapter is recommended after the exact servos
+are chosen; 5 A gives useful margin for Wi-Fi and simultaneous servo movement.
 Select F1/F2 after measuring the assembled product; the BOM ratings are
 starting points, not guarantees. A servo startup pulse must not share a thin
 wire or weak regulator path with the ESP32.
@@ -30,8 +31,9 @@ datasheet supports this path. Otherwise add a dedicated, thermally-rated
 
 - C1–C5: 100 nF ceramic at each module or rail entry.
 - C6: 470 µF, 10 V low-ESR bulk capacitor near the ESP32/buzzer entry.
-- C7: 1000 µF, 10 V low-ESR capacitor at the servo connector; increase after
-  measuring servo startup and stall behavior.
+- C7: 2200 µF, 10 V low-ESR capacitor at the three-servo distribution point;
+  increase after measuring servo startup and stall behavior. This capacitor
+  does not replace a correctly rated supply or fuse.
 - Q1's 100 kΩ gate pulldown ensures the buzzer is off while GPIO19 is reset.
 - A magnetic buzzer requires flyback protection; verify the selected part.
 

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
   <title>MediTrack Part 1 electrical block diagram</title>
-  <desc>Protected five volt supply powers an ESP32, OLED, lid sensor, servo gate, buttons, LEDs, and MOSFET-driven buzzer.</desc>
+  <desc>Protected five volt supply powers an ESP32, OLED, lid sensor, three servo gates, buttons, LEDs, and MOSFET-driven buzzer.</desc>
   <style>
     .box{fill:#eef5ff;stroke:#1d4ed8;stroke-width:2;rx:10}
     .power{fill:#fff7ed;stroke:#c2410c;stroke-width:2;rx:10}
@@ -22,7 +22,7 @@
   <rect x="775" y="300" width="180" height="68" class="warn"/><text x="815" y="330" class="label">Chute sensor</text><text x="795" y="352" class="small">Optional GPIO27 input</text><line x1="705" y1="325" x2="775" y2="335" class="line"/>
   <rect x="475" y="445" width="230" height="90" class="box"/><text x="540" y="480" class="label">Q1 MOSFET</text><text x="500" y="505" class="small">GPIO19 gate, 100 kΩ pulldown</text><text x="500" y="523" class="small">low-side buzzer driver</text><line x1="590" y1="370" x2="590" y2="445" class="line"/>
   <rect x="775" y="445" width="180" height="68" class="warn"/><text x="823" y="475" class="label">B1 buzzer</text><text x="795" y="497" class="small">current stays off GPIO</text><line x1="705" y1="490" x2="775" y2="480" class="line"/>
-  <rect x="975" y="445" width="180" height="68" class="power"/><text x="1010" y="475" class="label">5 V servo</text><text x="990" y="497" class="small">GPIO23 PWM / fused rail</text><line x1="705" y1="475" x2="975" y2="475" class="line"/>
+  <rect x="975" y="420" width="180" height="90" class="power"/><text x="1010" y="448" class="label">3 × 5 V servos</text><text x="990" y="472" class="small">GPIO23/25/26 PWM</text><text x="990" y="492" class="small">shared fused rail</text><line x1="705" y1="475" x2="975" y2="475" class="line"/>
   <rect x="180" y="610" width="190" height="68" class="box"/><text x="213" y="640" class="label">LED green</text><text x="205" y="662" class="small">GPIO2 + 680 Ω</text>
   <rect x="430" y="610" width="190" height="68" class="box"/><text x="468" y="640" class="label">LED red</text><text x="455" y="662" class="small">GPIO15 + 680 Ω</text>
   <rect x="680" y="610" width="250" height="68" class="box"/><text x="708" y="640" class="label">Alternate lid microswitch</text><text x="710" y="662" class="small">NO sense / common GND</text>

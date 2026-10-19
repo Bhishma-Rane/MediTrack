@@ -5,15 +5,19 @@ flowchart LR
   D1 --> V5[Protected 5 V rail]
   V5 --> U1[ESP32-WROOM-32E dev board]
   V5 --> B1[Active buzzer supply]
-  V5 --> F2[Servo branch fuse]
-  F2 --> SERVO[5 V servo\none-dose gate]
+  V5 --> F2[Three-servo branch fuse]
+  F2 --> SERVO1[5 V servo 1\ncylinder 1 gate]
+  F2 --> SERVO2[5 V servo 2\ncylinder 2 gate]
+  F2 --> SERVO3[5 V servo 3\ncylinder 3 gate]
   U1 --> V33[3.3 V rail / board regulator]
   V33 --> OLED[SH1106 OLED\nI2C GPIO21/22]
   V33 --> BTN[Three NO buttons\nGPIO4/16/17 to GND]
   LID[Lid microswitch / Hall / reed\nGPIO18, 3.3 V safe] --> U1
   U1 -->|GPIO19| Q1[N-MOSFET low-side driver\n100 kΩ gate pulldown]
   Q1 --> B1
-  U1 -->|GPIO23 PWM| SERVO
+  U1 -->|GPIO23 PWM| SERVO1
+  U1 -->|GPIO25 PWM| SERVO2
+  U1 -->|GPIO26 PWM| SERVO3
   CHUTE[Optional chute sensor\nGPIO27] --> U1
   U1 -->|GPIO2 + 680 Ω| GREEN[Green LED]
   U1 -->|GPIO15 + 680 Ω| RED[Red LED]

@@ -3,7 +3,9 @@ I2C_SDA,21,bidirectional,J1-1,SH1106 OLED SDA,3.3 V logic; short bus; common gro
 I2C_SCL,22,output,J1-2,SH1106 OLED SCL,3.3 V logic; pull-up to 3.3 V,high
 COMPARTMENT_SENSE,18,input,J2-1,Lid microswitch or Hall/reed sensor output,3.3 V-safe input; internal pull-up; sensor fault is unknown,high
 BUZZER_GATE,19,output,J3-1,Active buzzer MOSFET gate,100 kΩ gate pulldown; buzzer current stays off GPIO,low
-DISPENSER_SERVO,23,output,J6-1,Servo PWM control,50 Hz hardware PWM; signal only,low
+SERVO_CYLINDER_1,23,output,J6-1,Medicine cylinder 1 servo PWM,50 Hz hardware PWM; signal only; calibrated 0-180 degree endpoints,low
+SERVO_CYLINDER_2,25,output,J8-1,Medicine cylinder 2 servo PWM,50 Hz hardware PWM; signal only; calibrated 0-180 degree endpoints,low
+SERVO_CYLINDER_3,26,output,J9-1,Medicine cylinder 3 servo PWM,50 Hz hardware PWM; signal only; calibrated 0-180 degree endpoints,low
 DISPENSE_CONFIRM,27,input,J7-1,Optional chute break-beam or flap switch,3.3 V-safe input; pull-up/down as selected,unknown
 BTN_CONFIRM,4,input,J4-1,Confirm tactile button,NO button to GND; internal pull-up; 50 ms software debounce,high
 BTN_MUTE_SNOOZE,16,input,J4-2,Mute/snooze tactile button,NO button to GND; internal pull-up; 50 ms software debounce,high
@@ -11,5 +13,5 @@ BTN_SNOOZE,17,input,J4-3,Snooze tactile button,NO button to GND; internal pull-u
 LED_GREEN,2,output,J5-1,System OK/taken indicator,330-1000 Ω series resistor; boot-pin review required,low
 LED_RED,15,output,J5-2,Alarm/missed indicator,330-1000 Ω series resistor; boot-pin review required,low
 POWER_3V3,3V3,power,J1-3/J2-2/J7-2,OLED and 3.3 V sensor supply,verify each module accepts 3.3 V,stable
-POWER_5V,5V,power,J3-1/J6-2,Servo and optional 5 V buzzer branch,regulated low voltage only; fused servo branch,stable
+POWER_5V,5V,power,J3-1/J6-2/J8-2/J9-2,Servo and optional 5 V buzzer branch,regulated low voltage only; fused high-current servo branch,stable
 GROUND,GND,return,J1-4/J2-3/J3-2/J4-4/J5-3/J6-3/J7-3,Common return; servo and buzzer use star return,0 V
