@@ -17,7 +17,7 @@ class DailyBarChart(Flowable):
 
     def draw(self):
         canvas = self.canv
-        maximum = max(self.daily_counts.values(), default=1)
+        maximum = max(max(self.daily_counts.values(), default=0), 1)
         bar_width = self.width / max(len(self.daily_counts), 1) * 0.65
         for index, (day, count) in enumerate(sorted(self.daily_counts.items())):
             x = index * self.width / max(len(self.daily_counts), 1) + 12

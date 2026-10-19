@@ -17,6 +17,6 @@ def classify_log(status: str, response_time_sec: int | None, target_time, timest
     """Return the UI category required by the Part 4 log filter."""
     if status == "MISSED":
         return "MISSED"
-    if status == "TAKEN" and response_time_sec is not None and target_time is not None:
+    if status == "TAKEN" and response_time_sec is not None:
         return "LATE" if response_time_sec > 0 else "TAKEN"
     return status
