@@ -19,6 +19,23 @@ checklist, and a parametric OpenSCAD enclosure. The hardware is a low-voltage
 prototype access verifier; it is not a validated medical device and does not
 prove medication ingestion.
 
+## Part 2 and Part 3 integration
+
+The uploadable ESP32 firmware is in
+[`firmware/esp32_meditrack`](firmware/esp32_meditrack). It implements the
+fail-closed dispensing state machine, NTP time, Wi-Fi reconnect, LittleFS
+offline telemetry queue, and Preferences recovery. The backend accepts
+`DISPENSE_ATTEMPTED`, `DISPENSE_CONFIRMED`, `DISPENSE_UNCONFIRMED`,
+`DISPENSE_FAULT`, and `DEVICE_HEARTBEAT` without treating a dispense event as
+proof that medication was swallowed.
+
+See the [firmware upload guide](firmware/esp32_meditrack/README.md) and the
+[ESP32 wiring quick reference](hardware/wiring/esp32_firmware_wiring.md).
+Before uploading, edit the local `firmware/esp32_meditrack/include/config.h`
+with Wi-Fi, backend URL, patient ID, and schedule ID values. Keep credentials
+out of git. The API must be reachable from the ESP32; `localhost` on the ESP32
+is the ESP32 itself, not the computer running FastAPI.
+
 ## Setup
 
 Requires Python 3.11+ and a network connection for the first dependency install. The application itself and its tests run offline after installation.
@@ -65,7 +82,10 @@ make test
 make hardware-test
 ```
 
-Tests use temporary SQLite databases and a fake SMS sender, so they make no network calls and do not require Twilio credentials.
+`make test` runs the backend tests and the host-side ESP32 firmware validator.
+Tests use temporary SQLite databases and a fake SMS sender, so they make no
+network calls and do not require Twilio credentials. The actual ESP32 compile
+and upload are documented in the firmware README and require PlatformIO.
 
 ## Docker
 

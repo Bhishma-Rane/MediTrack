@@ -40,6 +40,7 @@ confirmation.
 | `bom/meditrack_bom.csv` | Components, ratings, and approved prototype parts |
 | `wiring/pinout.csv` | Machine-readable ESP32 pin assignment |
 | `wiring/point_to_point_wiring.md` | Connector and wire-by-wire assembly instructions |
+| `wiring/esp32_firmware_wiring.md` | Part 2 firmware wiring quick reference and bring-up order |
 | `assembly_guide.md` | Physical placement, printed-case assembly, sensor alternatives, and completion status |
 | `full_product_design.md` | Complete dispensing mechanism, product layout, state flow, and limitations |
 | `schematics/meditrack_block_diagram.svg` | Renderable circuit/block diagram with power and signal paths |
