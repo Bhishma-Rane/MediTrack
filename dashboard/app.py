@@ -76,7 +76,8 @@ else:
     st.info("No scheduled doses match the selected filters.")
 
 report_rows = [{"timestamp": item["taken_timestamp"] or item["target_timestamp"], "status": item["status"],
-                "response_time_sec": item["response_time_sec"], "medication_name": item["medication_name"], "late": item["late"]}
+                "target_timestamp": item["target_timestamp"], "response_time_sec": item["response_time_sec"],
+                "medication_name": item["medication_name"], "late": item["late"]}
                for item in occurrences if item["status"] != "PENDING"]
 st.subheader("Compliance report")
 pdf = build_compliance_pdf(patient["name"], report_rows, end_date)

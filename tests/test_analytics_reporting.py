@@ -19,6 +19,7 @@ def test_log_category_marks_late_taken_doses():
 def test_compliance_pdf_is_a_valid_pdf_with_incident_data():
     content = build_compliance_pdf("Asha Rane", [{
         "timestamp": "2026-10-18T08:16:00+00:00", "status": "MISSED",
+        "target_timestamp": "2026-10-18T08:00:00+00:00",
         "response_time_sec": None, "medication_name": "Lisinopril", "late": False,
     }], date(2026, 10, 18))
     assert content.startswith(b"%PDF")
