@@ -7,13 +7,19 @@ $fn = 48;
 // Primary parameters
 outer_x = 180;
 outer_y = 125;
-outer_z = 48;
+outer_z = 80;
 wall = 3;
 corner_r = 10;
 lid_t = 3;
 insert_x = 150;
 insert_y = 88;
 insert_depth = 18;
+hopper_x = 54;
+hopper_y = 54;
+hopper_z = 38;
+servo_bay_x = 42;
+chute_x = 30;
+chute_y = 42;
 oled_window_x = 42;
 oled_window_y = 24;
 button_d = 10;
@@ -65,7 +71,44 @@ module lid() {
     }
 }
 
-// Exploded layout for preview: base, insert, then lid.
+module hopper() {
+    // Removable medication-contact hopper. The gate is intentionally shown
+    // as a separate component so its final pocket can be sized for one test
+    // object after the object dimensions are known.
+    difference() {
+        rounded_box([hopper_x, hopper_y, hopper_z], 5);
+        translate([wall, wall, wall])
+            rounded_box([hopper_x-2*wall, hopper_y-2*wall, hopper_z], 3);
+        translate([(hopper_x-16)/2, -1, 0])
+            cube([16, wall+2, 12]);
+    }
+}
+
+module servo_bracket() {
+    // Fit-check envelope for an SG90-class servo. Replace with the selected
+    // servo's measured body and mounting-hole dimensions before printing final.
+    difference() {
+        cube([servo_bay_x, 24, 28]);
+        translate([3, -1, 3]) cube([servo_bay_x-6, 26, 22]);
+        translate([10, -1, 10]) rotate([-90,0,0]) cylinder(d=2.2, h=26);
+        translate([servo_bay_x-10, -1, 10]) rotate([-90,0,0]) cylinder(d=2.2, h=26);
+    }
+}
+
+module chute() {
+    // Open collection chute envelope; use a removable cup at its outlet.
+    difference() {
+        cube([chute_x, chute_y, 16]);
+        translate([wall, wall, wall]) cube([chute_x-2*wall, chute_y, 12]);
+    }
+}
+
+// Exploded layout for preview: base, insert, hopper, servo bracket, chute,
+// then lid. Final gate/linkage dimensions depend on the selected servo and
+// the validated test-object geometry.
 translate([0,0,0]) base_shell();
 translate([(outer_x-insert_x)/2, (outer_y-insert_y)/2, wall+1]) insert_tray();
+translate([18, 28, outer_z+8]) hopper();
+translate([82, 28, outer_z+8]) servo_bracket();
+translate([132, 35, outer_z+8]) chute();
 translate([0, outer_y+15, outer_z+10]) lid();

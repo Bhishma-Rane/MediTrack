@@ -1,14 +1,15 @@
 net,esp32_gpio,direction,connector,purpose,electrical_constraints,default_state
 I2C_SDA,21,bidirectional,J1-1,SH1106 OLED SDA,3.3 V logic; short bus; common ground,high impedance
 I2C_SCL,22,output,J1-2,SH1106 OLED SCL,3.3 V logic; pull-up to 3.3 V,high
-ULTRASONIC_TRIG,5,output,J2-2,HC-SR04 trigger,3.3 V output accepted only if module datasheet confirms,low
-COMPARTMENT_SENSE,18,input,J2-3,Conditioned HC-SR04 ECHO or microswitch sense,never above 3.3 V; 10k/20k divider in ultrasonic mode,pull-down/unknown
-BUZZER_GATE,19,output,J3-1,Active buzzer MOSFET gate,100k gate pulldown; buzzer current stays off GPIO,low
+COMPARTMENT_SENSE,18,input,J2-1,Lid microswitch or Hall/reed sensor output,3.3 V-safe input; internal pull-up; sensor fault is unknown,high
+BUZZER_GATE,19,output,J3-1,Active buzzer MOSFET gate,100 kΩ gate pulldown; buzzer current stays off GPIO,low
+DISPENSER_SERVO,23,output,J6-1,Servo PWM control,50 Hz hardware PWM; signal only,low
+DISPENSE_CONFIRM,27,input,J7-1,Optional chute break-beam or flap switch,3.3 V-safe input; pull-up/down as selected,unknown
 BTN_CONFIRM,4,input,J4-1,Confirm tactile button,NO button to GND; internal pull-up; 50 ms software debounce,high
 BTN_MUTE_SNOOZE,16,input,J4-2,Mute/snooze tactile button,NO button to GND; internal pull-up; 50 ms software debounce,high
 BTN_SNOOZE,17,input,J4-3,Snooze tactile button,NO button to GND; internal pull-up; 50 ms software debounce,high
-LED_GREEN,2,output,J5-1,System OK/taken indicator,330-1000 ohm series resistor; boot-pin review required,low
-LED_RED,15,output,J5-2,Alarm/missed indicator,330-1000 ohm series resistor; boot-pin review required,low
-POWER_3V3,3V3,power,J1-3,OLED supply,verify OLED module accepts 3.3 V,stable
-POWER_5V,5V,power,J2-1,HC-SR04 and optional 5 V buzzer supply,regulated low voltage only,stable
-GROUND,GND,return,J1-4,J2-4,J3-2,J4-4,J5-3,Single common return; route buzzer return separately,0 V
+LED_GREEN,2,output,J5-1,System OK/taken indicator,330-1000 Ω series resistor; boot-pin review required,low
+LED_RED,15,output,J5-2,Alarm/missed indicator,330-1000 Ω series resistor; boot-pin review required,low
+POWER_3V3,3V3,power,J1-3/J2-2/J7-2,OLED and 3.3 V sensor supply,verify each module accepts 3.3 V,stable
+POWER_5V,5V,power,J3-1/J6-2,Servo and optional 5 V buzzer branch,regulated low voltage only; fused servo branch,stable
+GROUND,GND,return,J1-4/J2-3/J3-2/J4-4/J5-3/J6-3/J7-3,Common return; servo and buzzer use star return,0 V

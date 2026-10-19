@@ -17,20 +17,17 @@ review.
 Confirm the OLED module's silk-screen order. Some inexpensive modules expose
 `GND/VCC/SCL/SDA` in a different order.
 
-## J2 — mutually exclusive compartment sensor (4-pin)
+## J2 — lid/compartment sensor (3-pin)
 
-| J2 pin | Ultrasonic mode | Microswitch mode |
+| J2 pin | Net | Destination |
 | ---: | --- | --- |
-| 1 | `POWER_5V` to HC-SR04 VCC | leave unpopulated |
-| 2 | `ULTRASONIC_TRIG` to HC-SR04 TRIG | leave unpopulated |
-| 3 | HC-SR04 ECHO -> R1/R2/R3 divider -> GPIO18 | microswitch NO contact -> GPIO18; configure pull-up/pull-down intentionally |
-| 4 | `GROUND` to HC-SR04 GND | microswitch COM -> GND |
+| 1 | `COMPARTMENT_SENSE` | Normally-open lid switch, Hall sensor output, or reed sensor output to GPIO18 |
+| 2 | `POWER_3V3` | Sensor VCC when the selected sensor needs power |
+| 3 | `GROUND` | Sensor ground; a microswitch COM contact returns here |
 
-In ultrasonic mode, wire `ECHO—R1 (10 kΩ)—SENSE_NODE—R2 (20 kΩ)—GND`, then
-`SENSE_NODE—R3 (1 kΩ)—GPIO18`. Measure `SENSE_NODE` before connecting the
-ESP32. In switch mode, do not leave the sense input floating: use the ESP32
-internal pull-up and a normally-open contact to ground, or fit an external
-10 kΩ pull-up at the controller.
+For the default microswitch, use the ESP32 internal pull-up and wire the
+normally-open contact between J2-1 and J2-3. A disconnected switch must resolve
+to open/unknown, never to a successful dose.
 
 ## J3 — buzzer (2-pin)
 
@@ -70,11 +67,36 @@ strapping pins. If the chosen board cannot boot reliably, keep the specified
 logical nets but move the LED load to a transistor/expander in a future PCB
 revision; do not solve it by forcing a boot pin with a strong external pull.
 
+## J6 — dispenser servo (3-pin)
+
+| J6 pin | Net | Destination |
+| ---: | --- | --- |
+| 1 | `DISPENSER_SERVO` | Servo signal from GPIO23 through optional 220 Ω resistor |
+| 2 | `POWER_5V` | Dedicated fused servo branch; never an ESP32 GPIO or 3.3 V rail |
+| 3 | `GROUND` | Common ground/star return near power entry |
+
+The servo actuates a one-dose gate. It does not count pills by itself. Use 50 Hz
+hardware PWM, calibrated endpoints, and a positive mechanical closed stop. Add
+C7 (typically 1000 µF) near the connector and size F2 from the exact servo
+stall current.
+
+## J7 — optional chute confirmation sensor (3-pin)
+
+| J7 pin | Net | Destination |
+| ---: | --- | --- |
+| 1 | `DISPENSE_CONFIRM` | 3.3 V-safe optical output or chute flap switch to GPIO27 |
+| 2 | `POWER_3V3` | Sensor supply when required |
+| 3 | `GROUND` | Sensor return |
+
+This confirms that an object passed through the chute. It does not prove the
+correct medication was dispensed or swallowed.
+
 ## Grounding and routing
 
 - Use a common ground, with the buzzer return routed directly to the power
   entry rather than through the OLED or sensor return.
-- Place C1–C5 at module power pins and C6 near the ESP32/buzzer power entry.
+- Place C1–C5 at module power pins, C6 near the ESP32/buzzer power entry, and
+  C7 near the servo connector.
 - Twist each signal with a ground return in longer sensor/button harnesses.
 - Add strain relief at the enclosure wall; the connector must not carry cable
   pull forces into the ESP32 header.

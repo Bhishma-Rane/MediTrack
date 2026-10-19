@@ -11,16 +11,18 @@ checks pass. Use a current-limited bench supply for first power.
 - [ ] Confirm B1 voltage/current and whether it is piezo or inductive.
 - [ ] Inspect polarity of D1, C6, LEDs, Q1, and all keyed connectors.
 - [ ] Confirm no 5 V net is shorted to any ESP32 GPIO.
-- [ ] In ultrasonic mode, confirm the ECHO divider is fitted and the sense node
-      is not connected directly to GPIO18.
-- [ ] In microswitch mode, confirm U3 is unplugged and the switch is wired NO
-      to the sense input and COM to ground.
+- [ ] Confirm no ultrasonic sensor is installed; use a 3.3 V-safe microswitch,
+      Hall sensor, or reed switch for the compartment state.
+- [ ] Confirm the lid sensor is wired to GPIO18 and has no floating input when
+      its harness is disconnected.
+- [ ] Confirm the servo is a known 5 V part and is not powered from 3.3 V or an
+      ESP32 GPIO.
 
 ## Unpowered electrical checks
 
 - [ ] Measure resistance from 5V_PROTECTED to GND; investigate a near-short.
 - [ ] Verify continuity from every connector ground to the common ground.
-- [ ] Verify the 10 kΩ / 20 kΩ divider values individually.
+- [ ] Verify the selected lid sensor voltage and pull-up/pull-down wiring.
 - [ ] Confirm Q1 source is GND, drain is B1 negative, and gate is GPIO19.
 - [ ] Confirm LED1/LED2 each have a series resistor.
 - [ ] Check that GPIO2/GPIO15 are not hard-pulled to an invalid boot level.
@@ -38,10 +40,15 @@ checks pass. Use a current-limited bench supply for first power.
 - [ ] Observe startup current and brownout behavior.
 - [ ] Confirm buzzer is silent while GPIO19 is reset.
 - [ ] Confirm LEDs do not prevent boot.
-- [ ] Measure the ultrasonic ECHO divider node while the sensor is active; it
-      must never exceed the ESP32's GPIO maximum.
+- [ ] Measure the servo branch voltage before connecting the servo signal.
+- [ ] Verify the servo gate has a hard closed stop and cannot enter the pill
+      path or electronics bay.
 - [ ] Exercise each button and verify the idle high / pressed low levels.
 - [ ] Confirm OLED remains stable while the buzzer switches.
+- [ ] Move the servo through calibrated endpoints with no pills installed;
+      verify it cannot bind, overtravel, or open the gate at boot.
+- [ ] Test a chute jam and power interruption; the system must stop and require
+      inspection rather than retrying indefinitely.
 
 ## Mechanical validation
 

@@ -13,9 +13,10 @@ def main() -> None:
     expected = {
         "I2C_SDA": "21",
         "I2C_SCL": "22",
-        "ULTRASONIC_TRIG": "5",
         "COMPARTMENT_SENSE": "18",
         "BUZZER_GATE": "19",
+        "DISPENSER_SERVO": "23",
+        "DISPENSE_CONFIRM": "27",
         "BTN_CONFIRM": "4",
         "BTN_MUTE_SNOOZE": "16",
         "BTN_SNOOZE": "17",
@@ -27,11 +28,11 @@ def main() -> None:
         assert by_net[net]["esp32_gpio"] == gpio, (net, by_net[net])
 
     bom_text = (ROOT / "bom/meditrack_bom.csv").read_text()
-    assert "ECHO level shifting mandatory" in bom_text
-    assert "10 kOhm" in bom_text and "20 kOhm" in bom_text
+    assert "Servo motor" in bom_text
+    assert "Normally-open lever switch" in bom_text
 
     diagram = (ROOT / "schematics/meditrack_block_diagram.svg").read_text()
-    for required in ("GPIO21", "GPIO22", "GPIO19", "10 kΩ / 20 kΩ", "GPIO18"):
+    for required in ("GPIO21", "GPIO22", "GPIO19", "GPIO18"):
         assert required in diagram
 
     for required_file in (

@@ -10,14 +10,16 @@ them as certification evidence.
 | --- | ---: | ---: | --- |
 | ESP32 Wi-Fi and MCU | 160 mA | 500 mA | 5 V input via board regulator |
 | SH1106 OLED | 25 mA | 40 mA | 3.3 V |
-| HC-SR04 | 15 mA | 20 mA | 5 V |
+| Lid microswitch / Hall / reed sensor | 0–10 mA | 15 mA | 3.3 V |
 | Active buzzer | 25 mA | 80 mA | 3.3/5 V per selected part |
+| Servo motor | 100 mA | 700–1000 mA stall/startup | 5 V dedicated branch |
 | LEDs and buttons | 10 mA | 20 mA | 3.3 V |
-| **Estimated total** | **235 mA** | **660 mA** | **5 V input equivalent** |
+| **Estimated total** | **335 mA** | **1.6 A** | **5 V input equivalent** |
 
-A 2 A adapter gives margin for Wi-Fi bursts and regulator losses. Select the
-polyfuse after measuring the assembled product; the BOM's 500 mA hold rating
-is a starting point, not a guarantee.
+A certified 5 V, 2–3 A adapter is recommended after the exact servo is chosen.
+Select F1/F2 after measuring the assembled product; the BOM ratings are
+starting points, not guarantees. A servo startup pulse must not share a thin
+wire or weak regulator path with the ESP32.
 
 ## Protection and decoupling
 
@@ -28,6 +30,8 @@ datasheet supports this path. Otherwise add a dedicated, thermally-rated
 
 - C1–C5: 100 nF ceramic at each module or rail entry.
 - C6: 470 µF, 10 V low-ESR bulk capacitor near the ESP32/buzzer entry.
+- C7: 1000 µF, 10 V low-ESR capacitor at the servo connector; increase after
+  measuring servo startup and stall behavior.
 - Q1's 100 kΩ gate pulldown ensures the buzzer is off while GPIO19 is reset.
 - A magnetic buzzer requires flyback protection; verify the selected part.
 
@@ -44,17 +48,10 @@ datasheet supports this path. Otherwise add a dedicated, thermally-rated
 - Keep mains voltage outside the product. Use only a certified low-voltage
   adapter and inspect the USB cable for strain damage.
 
-## Sensor thresholds
+## Sensor logic
 
-Ultrasonic starting thresholds:
-
-- distance `< 5 cm`: closed
-- distance `> 8 cm`: open
-- 5–8 cm: uncertain; hold the prior state and do not log a dose
-
-Require three consistent samples over at least 300 ms before a state change.
-The final threshold must be measured with the real compartment, lid material,
-sensor angle, and medication insert installed.
-
-For microswitch mode, a stable `LOW` means contact closed and `HIGH` means
-compartment open only when the pull-up and switch wiring have been verified.
+For the default normally-open microswitch, a stable `LOW` means the lid is
+closed and a stable `HIGH` means the lid is open only after the pull-up and
+mechanical actuation have been verified. Require three consistent samples over
+at least 300 ms before a state change. Hall and reed sensors need the same
+debounce and a calibration of their magnet gap.

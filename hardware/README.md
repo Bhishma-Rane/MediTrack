@@ -8,25 +8,29 @@ that opening a compartment proves that medication was consumed.
 
 ## Product definition
 
-MediTrack is a low-voltage, single-compartment medication-access verifier:
+MediTrack is a low-voltage, single-dose-at-a-time medication dispenser and
+access verifier:
 
 1. A scheduled reminder is displayed and sounded locally.
-2. The user opens the medication compartment.
-3. A sensor detects the open/closed transition.
-4. The user closes the compartment; the controller can then record an access
-   event for the backend.
-5. If the compartment is not opened during the grace window, the controller
-   records a missed event and may notify a caregiver when Parts 2–4 are added.
+2. After local confirmation, a servo opens a mechanically constrained,
+   one-dose gate over a chute.
+3. An optional chute sensor confirms that an object passed through; a lid sensor
+   detects whether the user accessed the collection compartment.
+4. The user opens and closes the collection compartment; the controller can
+   record access and dispense events for the backend.
+5. If dispensing is jammed, uncertain, or interrupted, the controller stops,
+   alarms, and requires inspection rather than retrying indefinitely.
 
 The prototype has two mutually exclusive sensing options:
 
-- **Preferred for a physical prototype:** a normally-open lid microswitch.
-- **Demonstration/non-contact option:** an HC-SR04 ultrasonic module.
+- **Preferred compartment sensor:** a normally-open lid microswitch on GPIO18.
+- **Contactless alternative:** a Hall sensor or reed switch with a lid magnet.
+- **Optional dispense confirmation:** a 3.3 V-safe optical break-beam or chute
+  flap sensor on GPIO27.
 
-Only one sensor mode is populated at a time. The pin map reserves GPIO18 for
-the conditioned ultrasonic `ECHO` signal; a microswitch uses the same logical
-compartment-state input through the alternate connector wiring described in
-`wiring/point_to_point_wiring.md`.
+The product no longer uses an HC-SR04. GPIO18 is the 3.3 V-safe lid sensor
+input. GPIO23 controls a 5 V servo on a dedicated fused power branch. GPIO27
+is reserved for optional chute confirmation.
 
 ## Included artifacts
 
@@ -36,6 +40,7 @@ compartment-state input through the alternate connector wiring described in
 | `wiring/pinout.csv` | Machine-readable ESP32 pin assignment |
 | `wiring/point_to_point_wiring.md` | Connector and wire-by-wire assembly instructions |
 | `assembly_guide.md` | Physical placement, printed-case assembly, sensor alternatives, and completion status |
+| `full_product_design.md` | Complete dispensing mechanism, product layout, state flow, and limitations |
 | `schematics/meditrack_block_diagram.svg` | Renderable circuit/block diagram with power and signal paths |
 | `schematics/meditrack_block_diagram.mmd` | Mermaid source for the diagram |
 | `enclosure/meditrack_enclosure.scad` | Parametric OpenSCAD product enclosure |
@@ -45,18 +50,20 @@ compartment-state input through the alternate connector wiring described in
 
 ## Electrical rules that must not be skipped
 
-- **Never connect conventional HC-SR04 `ECHO` directly to an ESP32 GPIO.**
-  The divider in the sensor-conditioning diagram reduces 5 V to about 3.3 V.
 - Use a certified, isolated 5 V USB supply. No mains wiring belongs inside the
   enclosure.
+- The servo is powered from a dedicated, fused 5 V branch; never power it from
+  an ESP32 GPIO or 3.3 V output. Add a bulk capacitor near the servo.
+- The servo gate must have a positive closed stop and must be mechanically
+  fail-closed. A servo position alone is not proof that a pill was dispensed.
 - The buzzer is driven through a MOSFET; GPIO19 must not source buzzer current
   directly. A 100 kΩ gate pulldown keeps it off during reset.
 - GPIO2 and GPIO15 are boot-strapping pins. The LED circuits must not force a
   boot-invalid level; verify the exact ESP32 board during bring-up.
-- Sensor uncertainty, a disconnected sensor, and an out-of-range reading are
-  **not** evidence that a dose was taken.
-- The 5 cm closed / 8 cm open thresholds are starting values and require
-  calibration after the final lid and sensor bracket are installed.
+- Sensor uncertainty, a disconnected sensor, a jam, or a missing chute
+  confirmation are **not** evidence that a dose was taken.
+- Dispense events should be separated into attempted and confirmed. Neither
+  proves the medication was swallowed.
 
 ## Build sequence
 
@@ -64,10 +71,12 @@ compartment-state input through the alternate connector wiring described in
 2. Assemble the electronics on a breadboard or carrier, with the ESP32
    unpowered while checking continuity.
 3. Follow `validation/bringup_checklist.md` using a current-limited supply.
-4. Validate the ultrasonic divider or microswitch mode independently.
+4. Validate the lid sensor and servo gate independently with inert test
+   objects; do not begin with real medication.
 5. Print `enclosure/meditrack_enclosure.scad`, install the removable insert,
-   then repeat sensor calibration with the real lid geometry.
-6. Only after the hardware checks pass should firmware and backend integration
+   hopper, gate, chute, servo bracket, and lid sensor.
+6. Calibrate the gate for one known object shape and test jam/power-loss cases.
+7. Only after the hardware checks pass should firmware and backend integration
    be connected.
 
 ## Prototype limitations

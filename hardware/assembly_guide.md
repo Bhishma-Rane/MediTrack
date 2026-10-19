@@ -55,8 +55,8 @@ short version is:
 | OLED SDA | GPIO21; VCC to 3.3 V; GND to GND |
 | OLED SCL | GPIO22; VCC to 3.3 V; GND to GND |
 | Lid microswitch, preferred | GPIO18 with pull-up; switch between GPIO18 and GND |
-| HC-SR04 TRIG, if used | GPIO5 |
-| HC-SR04 ECHO, if used | ECHO -> 10 kΩ -> sense node; sense node -> 20 kΩ -> GND; sense node -> 1 kΩ -> GPIO18 |
+| Servo signal | GPIO23; servo power is a separate fused 5 V branch; servo ground is common |
+| Optional chute sensor | GPIO27; 3.3 V-safe output, with its selected pull-up/down |
 | Buzzer | Positive to its rated rail; negative to Q1 drain; Q1 source to GND; Q1 gate to GPIO19; 100 kΩ gate-to-GND |
 | Confirm button | GPIO4 to GND when pressed; internal pull-up |
 | Mute/snooze button | GPIO16 to GND when pressed; internal pull-up |
@@ -68,11 +68,10 @@ All grounds are common. Route the buzzer return directly back to the power
 entry, not through the OLED or sensor return. Test the voltages before the
 ESP32 is connected.
 
-## Alternatives to the HC-SR04
+## Compartment sensor choices
 
-You do **not** need to use an HC-SR04. For a medication lid, a direct
-open/closed sensor is normally more reliable and simpler than measuring
-distance.
+The design does **not** use an HC-SR04. For a medication lid, a direct
+open/closed sensor is more reliable and simpler than measuring distance.
 
 | Available sensor type | Recommendation | Wiring change | Mechanical placement |
 | --- | --- | --- | --- |
@@ -100,12 +99,32 @@ For the first physical prototype, use this order:
    gap.
 3. VL53L0X/VL53L1X if you want a digital distance sensor and can mount a flat
    target on the lid.
-4. HC-SR04 only if it is the sensor you already have or you specifically want
-   an ultrasonic demonstration.
+4. Use a distance sensor only if there is a specific mechanical reason; it is
+   not required for this design.
 
 Regardless of sensor choice, firmware must debounce and require three stable
 readings over at least 300 ms. An unknown or noisy reading must not become
 `DOSE_TAKEN`.
+
+## How dispensing works
+
+The hopper sits above a chute. A servo on GPIO23 moves a one-dose gate between
+two calibrated positions. The gate has a hard closed stop, and the mechanical
+geometry must prevent free fall when the servo is unpowered. A normal cycle is:
+
+1. Load the hopper with one validated test-object type.
+2. Keep the gate closed until the local confirm button is pressed.
+3. Move the servo once to the dispense position.
+4. Allow one object to fall into the collection cup.
+5. If installed, wait for the chute sensor on GPIO27.
+6. Return the servo to the closed stop.
+7. Record attempted, confirmed, or unconfirmed dispensing.
+
+The servo must not be powered from the ESP32. Use a dedicated fused 5 V branch,
+common ground, and approximately 1000 µF bulk capacitance near the servo. Do
+not retry indefinitely after a jam or power interruption. The collection cup
+and hopper should be removable and cleanable, while the servo and electronics
+remain outside the medication-contact surfaces.
 
 ## Current completion estimate
 
