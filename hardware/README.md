@@ -35,6 +35,7 @@ compartment-state input through the alternate connector wiring described in
 | `bom/meditrack_bom.csv` | Components, ratings, and approved prototype parts |
 | `wiring/pinout.csv` | Machine-readable ESP32 pin assignment |
 | `wiring/point_to_point_wiring.md` | Connector and wire-by-wire assembly instructions |
+| `assembly_guide.md` | Physical placement, printed-case assembly, sensor alternatives, and completion status |
 | `schematics/meditrack_block_diagram.svg` | Renderable circuit/block diagram with power and signal paths |
 | `schematics/meditrack_block_diagram.mmd` | Mermaid source for the diagram |
 | `enclosure/meditrack_enclosure.scad` | Parametric OpenSCAD product enclosure |
