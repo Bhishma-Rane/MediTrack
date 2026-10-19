@@ -1,0 +1,25 @@
+%% MediTrack Part 1 electrical architecture
+flowchart LR
+  PS1[Certified isolated 5 V USB supply] --> F1[500 mA resettable fuse]
+  F1 --> D1[Reverse-polarity protection]
+  D1 --> V5[Protected 5 V rail]
+  V5 --> U1[ESP32-WROOM-32E dev board]
+  V5 --> U3[HC-SR04 optional sensor]
+  V5 --> B1[Active buzzer supply]
+  U1 --> V33[3.3 V rail / board regulator]
+  V33 --> OLED[SH1106 OLED\nI2C GPIO21/22]
+  V33 --> BTN[Three NO buttons\nGPIO4/16/17 to GND]
+  U3 -->|ECHO 5 V| DIV[10 kΩ / 20 kΩ divider\n+ optional 1 kΩ series]
+  DIV -->|<= 3.3 V| U1
+  U1 -->|GPIO5 TRIG| U3
+  U1 -->|GPIO19| Q1[N-MOSFET low-side driver\n100 kΩ gate pulldown]
+  Q1 --> B1
+  U1 -->|GPIO2 + 680 Ω| GREEN[Green LED]
+  U1 -->|GPIO15 + 680 Ω| RED[Red LED]
+  SW[Optional lid microswitch\nNO contact to GND] -->|alternate J2 sense| U1
+  GND[Common GND star/return] --- U1
+  GND --- U3
+  GND --- OLED
+  GND --- BTN
+  GND --- Q1
+  GND --- SW

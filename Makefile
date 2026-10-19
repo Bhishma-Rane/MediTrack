@@ -1,13 +1,18 @@
-.PHONY: install test run dashboard
+.PHONY: install test hardware-test run dashboard
+
+PYTHON ?= python3
 
 install:
-	python -m pip install --requirement requirements.txt
+	$(PYTHON) -m pip install --requirement requirements.txt
 
 test:
-	python -m pytest -q
+	$(PYTHON) -m pytest -q
+
+hardware-test:
+	$(PYTHON) hardware/validation/part1_validate.py
 
 run:
-	python -m uvicorn meditrack.main:app --host 0.0.0.0 --port 8000
+	$(PYTHON) -m uvicorn meditrack.main:app --host 0.0.0.0 --port 8000
 
 dashboard:
-	python -m streamlit run dashboard/app.py
+	$(PYTHON) -m streamlit run dashboard/app.py

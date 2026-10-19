@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <title>MediTrack Part 1 electrical block diagram</title>
+  <desc>Protected five volt supply powers an ESP32, OLED, optional HC-SR04 with echo divider, buttons, LEDs, and MOSFET-driven buzzer.</desc>
+  <style>
+    .box{fill:#eef5ff;stroke:#1d4ed8;stroke-width:2;rx:10}
+    .power{fill:#fff7ed;stroke:#c2410c;stroke-width:2;rx:10}
+    .warn{fill:#fff1f2;stroke:#be123c;stroke-width:2;rx:10}
+    .line{stroke:#334155;stroke-width:2;fill:none;marker-end:url(#arrow)}
+    .ground{stroke:#475569;stroke-width:2;fill:none;stroke-dasharray:7 5}
+    text{font-family:Arial,sans-serif;fill:#0f172a}.title{font-size:26px;font-weight:bold}.label{font-size:16px}.small{font-size:13px}
+  </style>
+  <defs><marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#334155"/></marker></defs>
+  <text x="40" y="42" class="title">MediTrack Part 1 — protected low-voltage hardware</text>
+  <text x="40" y="67" class="small">Revision A · prototype architecture · HC-SR04 ECHO is never connected directly to an ESP32 GPIO</text>
+  <rect x="40" y="115" width="175" height="70" class="power"/><text x="60" y="145" class="label">Certified 5 V / 2 A</text><text x="60" y="167" class="small">isolated USB supply</text>
+  <rect x="260" y="115" width="170" height="70" class="power"/><text x="282" y="145" class="label">F1 + D1</text><text x="282" y="167" class="small">fuse + reverse polarity</text>
+  <rect x="475" y="100" width="230" height="100" class="box"/><text x="535" y="135" class="label">U1 ESP32</text><text x="500" y="160" class="small">WROOM-32E controller</text><text x="500" y="180" class="small">5 V input / 3.3 V GPIO</text>
+  <line x1="215" y1="150" x2="260" y2="150" class="line"/><line x1="430" y1="150" x2="475" y2="150" class="line"/>
+  <rect x="775" y="95" width="180" height="68" class="box"/><text x="800" y="125" class="label">SH1106 OLED</text><text x="800" y="147" class="small">3.3 V · SDA GPIO21/SCL GPIO22</text><line x1="705" y1="135" x2="775" y2="135" class="line"/>
+  <rect x="775" y="205" width="180" height="68" class="box"/><text x="805" y="235" class="label">3 × buttons</text><text x="795" y="257" class="small">GPIO4/16/17 → GND</text><line x1="705" y1="170" x2="775" y2="235" class="line"/>
+  <rect x="475" y="280" width="230" height="90" class="box"/><text x="525" y="315" class="label">5 V sensor branch</text><text x="500" y="340" class="small">HC-SR04 TRIG GPIO5</text><text x="500" y="358" class="small">ECHO → divider → GPIO18</text><line x1="590" y1="200" x2="590" y2="280" class="line"/>
+  <rect x="775" y="300" width="180" height="68" class="warn"/><text x="815" y="330" class="label">10 kΩ / 20 kΩ</text><text x="795" y="352" class="small">5 V → ~3.3 V divider</text><line x1="705" y1="325" x2="775" y2="335" class="line"/>
+  <rect x="475" y="445" width="230" height="90" class="box"/><text x="540" y="480" class="label">Q1 MOSFET</text><text x="500" y="505" class="small">GPIO19 gate, 100 kΩ pulldown</text><text x="500" y="523" class="small">low-side buzzer driver</text><line x1="590" y1="370" x2="590" y2="445" class="line"/>
+  <rect x="775" y="445" width="180" height="68" class="warn"/><text x="823" y="475" class="label">B1 buzzer</text><text x="795" y="497" class="small">current stays off GPIO</text><line x1="705" y1="490" x2="775" y2="480" class="line"/>
+  <rect x="180" y="610" width="190" height="68" class="box"/><text x="213" y="640" class="label">LED green</text><text x="205" y="662" class="small">GPIO2 + 680 Ω</text>
+  <rect x="430" y="610" width="190" height="68" class="box"/><text x="468" y="640" class="label">LED red</text><text x="455" y="662" class="small">GPIO15 + 680 Ω</text>
+  <rect x="680" y="610" width="250" height="68" class="box"/><text x="708" y="640" class="label">Alternate lid microswitch</text><text x="710" y="662" class="small">NO sense / common GND</text>
+  <line x1="540" y1="200" x2="275" y2="610" class="line"/><line x1="650" y1="200" x2="525" y2="610" class="line"/><line x1="705" y1="350" x2="805" y2="610" class="line"/>
+  <line x1="40" y1="710" x2="1070" y2="710" class="ground"/><text x="40" y="742" class="small">Common GND return; route buzzer return directly to power entry. Thresholds: &lt;5 cm closed, &gt;8 cm open, middle uncertain.</text>
+</svg>

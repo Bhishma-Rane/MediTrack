@@ -1,4 +1,4 @@
-# MediTrack — Parts 3 and 4
+# MediTrack — software and Part 1 hardware
 
 FastAPI telemetry and real-time notification backend for the MediTrack ESP32 medication compliance system.
 
@@ -11,6 +11,13 @@ FastAPI telemetry and real-time notification backend for the MediTrack ESP32 med
 - Grace-period-aware missed-dose alerts. Twilio is used only when its three settings are present; otherwise the default is a safe local dry-run sender.
 
 Part 4 adds a Streamlit caregiver dashboard and downloadable ReportLab PDF compliance reports.
+
+Part 1 hardware is specified in [`hardware/README.md`](hardware/README.md).
+It includes the ESP32 pinout, point-to-point harness tables, a renderable SVG
+electrical diagram, bill of materials, power/fail-safe design, bring-up
+checklist, and a parametric OpenSCAD enclosure. The hardware is a low-voltage
+prototype access verifier; it is not a validated medical device and does not
+prove medication ingestion.
 
 ## Setup
 
@@ -53,6 +60,9 @@ Patients and schedules should be provisioned in the database before telemetry in
 
 ```bash
 make test
+
+# Validate Part 1 hardware artifacts offline
+make hardware-test
 ```
 
 Tests use temporary SQLite databases and a fake SMS sender, so they make no network calls and do not require Twilio credentials.
