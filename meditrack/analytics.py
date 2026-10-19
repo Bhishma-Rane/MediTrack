@@ -20,3 +20,8 @@ def classify_log(status: str, response_time_sec: int | None, target_time, timest
     if status == "TAKEN" and response_time_sec is not None:
         return "LATE" if response_time_sec > 0 else "TAKEN"
     return status
+
+
+def occurrence_adherence(occurrences: Iterable[dict]) -> float:
+    values = [item for item in occurrences if item.get("status") != "PENDING"]
+    return round(sum(item.get("status") == "TAKEN" for item in values) / len(values) * 100, 1) if values else 0.0
