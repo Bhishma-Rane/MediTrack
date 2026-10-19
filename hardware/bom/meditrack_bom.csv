@@ -23,7 +23,7 @@ F1,1,Resettable fuse,2.5 A hold polyfuse,5 V input protection,Select from measur
 F2,1,Servo branch fuse,1.5 A to 2.5 A resettable fuse,Three-servo branch protection,Select from exact servo datasheet and stall test
 D1,1,Reverse-polarity protection,SS14 or ideal-diode controller,Rated above supply current,Verify voltage drop
 J1,1,OLED connector,4-pin keyed JST-PH,3V3/SDA/SCL/GND,Pin order must match module
-J2,1,Sensor connector,4-pin keyed JST-PH,5V/TRIG/SENSE/GND,Populate either U3 or S1 harness
+J2,1,Lid sensor connector,3-pin keyed JST-PH,SENSE/3V3/GND,For microswitch Hall or reed lid sensor
 J3,1,Buzzer connector,2-pin keyed JST-PH,BUZZER+/BUZZER-,Keep return away from sensor return
 J4,1,Button connector,4-pin keyed JST-PH,three buttons/GND,Use short harness or add ESD protection
 J5,1,LED connector,3-pin keyed JST-PH,green/red/GND,Series resistors remain on controller side
@@ -31,4 +31,4 @@ J6,1,Servo connector,3-pin keyed connector,signal/5V/GND,Use a separate power pa
 J8,1,Servo cylinder 2 connector,3-pin keyed connector,signal/5V/GND,Separate signal; shared high-current 5 V branch
 J9,1,Servo cylinder 3 connector,3-pin keyed connector,signal/5V/GND,Separate signal; shared high-current 5 V branch
 J7,1,Chute sensor connector,3-pin keyed connector,sense/3V3-or-5V/GND,Populate only if confirmation sensor is fitted
-PS1,1,USB power supply,Certified 5 V 2 A adapter,Isolated low-voltage output,Do not put mains inside enclosure
+PS1,1,USB power supply,Certified 5 V 5 A adapter,Isolated low-voltage output; final rating from measured servo stall current,Do not put mains inside enclosure
